@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+
+  db:
+    image: ankane/pgvector:latest
+    container_name: nlqueryengine-db
+    environment:
+      POSTGRES_DB:       chinook
+      POSTGRES_USER:     postgres
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql-rag-backend/data/chinook.sql:/docker-entrypoint-initdb.d/chinook.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./sql-rag-backend
+    container_name: nlqueryengine-backend
+    env_file: ./sql-rag-backend/.env
+    environment:
+      DATABASE_URL:          postgresql://postgres:pass@db:5432/chinook
+      READONLY_DATABASE_URL: postgresql://rag_readonly:readonly_pass@db:5432/chinook
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

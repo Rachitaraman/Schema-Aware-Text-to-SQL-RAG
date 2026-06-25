@@ -1,0 +1,103 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" font-family="'Courier New', monospace">
+  <rect width="800" height="500" fill="#b8d4c8"/>
+
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-size="20" font-weight="bold" fill="#1a3d2b">NLQueryEngine — Pipeline Architecture</text>
+
+  <!-- Step boxes -->
+  <!-- 1: User Question -->
+  <rect x="30" y="70" width="160" height="60" fill="#f5f0e8" stroke="#1a3d2b" stroke-width="3"/>
+  <text x="110" y="96" text-anchor="middle" font-size="11" fill="#1a3d2b" font-weight="bold">User Question</text>
+  <text x="110" y="114" text-anchor="middle" font-size="10" fill="#1a3d2b">"Top 5 customers"</text>
+
+  <!-- Arrow -->
+  <line x1="190" y1="100" x2="220" y2="100" stroke="#1a3d2b" stroke-width="2"/>
+  <polygon points="220,95 230,100 220,105" fill="#1a3d2b"/>
+
+  <!-- 2: Schema Retrieval -->
+  <rect x="230" y="70" width="160" height="60" fill="#e8f4ef" stroke="#1a3d2b" stroke-width="3"/>
+  <text x="310" y="92" text-anchor="middle" font-size="11" fill="#1a3d2b" font-weight="bold">Schema Retrieval</text>
+  <text x="310" y="108" text-anchor="middle" font-size="10" fill="#2d5a40">pgvector cosine sim</text>
+  <text x="310" y="122" text-anchor="middle" font-size="10" fill="#2d5a40">top-k tables + glossary</text>
+
+  <!-- Arrow -->
+  <line x1="390" y1="100" x2="420" y2="100" stroke="#1a3d2b" stroke-width="2"/>
+  <polygon points="420,95 430,100 420,105" fill="#1a3d2b"/>
+
+  <!-- 3: SQL Generation -->
+  <rect x="430" y="70" width="160" height="60" fill="#e8f4ef" stroke="#1a3d2b" stroke-width="3"/>
+  <text x="510" y="92" text-anchor="middle" font-size="11" fill="#1a3d2b" font-weight="bold">SQL Generation</text>
+  <text x="510" y="108" text-anchor="middle" font-size="10" fill="#2d5a40">Claude API</text>
+  <text x="510" y="122" text-anchor="middle" font-size="10" fill="#2d5a40">context-grounded</text>
+
+  <!-- Arrow -->
+  <line x1="590" y1="100" x2="620" y2="100" stroke="#1a3d2b" stroke-width="2"/>
+  <polygon points="620,95 630,100 620,105" fill="#1a3d2b"/>
+
+  <!-- 4: Validation -->
+  <rect x="630" y="70" width="140" height="60" fill="#fff0ee" stroke="#e8614a" stroke-width="3"/>
+  <text x="700" y="92" text-anchor="middle" font-size="11" fill="#1a3d2b" font-weight="bold">Validation</text>
+  <text x="700" y="108" text-anchor="middle" font-size="10" fill="#e8614a">sqlglot → EXPLAIN</text>
+  <text x="700" y="122" text-anchor="middle" font-size="10" fill="#e8614a">cost guard</text>
+
+  <!-- Self-correction loop arrow -->
+  <path d="M 700 130 Q 700 185 510 185 Q 430 185 430 140" fill="none" stroke="#e8614a" stroke-width="2" stroke-dasharray="6,3"/>
+  <polygon points="430,135 425,145 435,145" fill="#e8614a"/>
+  <text x="570" y="200" text-anchor="middle" font-size="10" fill="#e8614a">self-correction retry (max 2)</text>
+
+  <!-- Arrow down from Validation -->
+  <line x1="700" y1="130" x2="700" y2="230" stroke="#1a3d2b" stroke-width="2"/>
+  <polygon points="695,230 700,240 705,230" fill="#1a3d2b"/>
+
+  <!-- 5: Execution -->
+  <rect x="620" y="240" width="160" height="60" fill="#e8f4ef" stroke="#1a3d2b" stroke-width="3"/>
+  <text x="700" y="262" text-anchor="middle" font-size="11" fill="#1a3d2b" font-weight="bold">Execution</text>
+  <text x="700" y="278" text-anchor="middle" font-size="10" fill="#2d5a40">read-only role</text>
+  <text x="700" y="292" text-anchor="middle" font-size="10" fill="#2d5a40">100-row cap</text>
+
+  <!-- Arrow left -->
+  <line x1="620" y1="270" x2="590" y2="270" stroke="#1a3d2b" stroke-width="2"/>
+  <polygon points="590,265 580,270 590,275" fill="#1a3d2b"/>
+
+  <!-- 6: Answer Synthesis -->
+  <rect x="420" y="240" width="160" height="60" fill="#e8f4ef" stroke="#1a3d2b" stroke-width="3"/>
+  <text x="500" y="262" text-anchor="middle" font-size="11" fill="#1a3d2b" font-weight="bold">Answer Synthesis</text>
+  <text x="500" y="278" text-anchor="middle" font-size="10" fill="#2d5a40">Claude API</text>
+  <text x="500" y="292" text-anchor="middle" font-size="10" fill="#2d5a40">plain-English answer</text>
+
+  <!-- Arrow left -->
+  <line x1="420" y1="270" x2="390" y2="270" stroke="#1a3d2b" stroke-width="2"/>
+  <polygon points="390,265 380,270 390,275" fill="#1a3d2b"/>
+
+  <!-- 7: Response -->
+  <rect x="220" y="240" width="160" height="60" fill="#f5f0e8" stroke="#1a3d2b" stroke-width="3"/>
+  <text x="300" y="262" text-anchor="middle" font-size="11" fill="#1a3d2b" font-weight="bold">Response</text>
+  <text x="300" y="278" text-anchor="middle" font-size="10" fill="#1a3d2b">answer + SQL + table</text>
+  <text x="300" y="292" text-anchor="middle" font-size="10" fill="#1a3d2b">+ source tables</text>
+
+  <!-- pgvector box -->
+  <rect x="230" y="360" width="160" height="55" fill="#d4e8e0" stroke="#1a3d2b" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="310" y="382" text-anchor="middle" font-size="11" fill="#1a3d2b" font-weight="bold">pgvector Index</text>
+  <text x="310" y="398" text-anchor="middle" font-size="10" fill="#2d5a40">schema_docs table</text>
+  <text x="310" y="412" text-anchor="middle" font-size="10" fill="#2d5a40">VECTOR(384) embeddings</text>
+  <line x1="310" y1="360" x2="310" y2="130" stroke="#8fb5a4" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <!-- Postgres box -->
+  <rect x="620" y="360" width="160" height="55" fill="#d4e8e0" stroke="#1a3d2b" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="700" y="382" text-anchor="middle" font-size="11" fill="#1a3d2b" font-weight="bold">PostgreSQL</text>
+  <text x="700" y="398" text-anchor="middle" font-size="10" fill="#2d5a40">chinook database</text>
+  <text x="700" y="412" text-anchor="middle" font-size="10" fill="#2d5a40">rag_readonly role</text>
+  <line x1="700" y1="360" x2="700" y2="300" stroke="#8fb5a4" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <!-- Legend -->
+  <rect x="30" y="360" width="170" height="110" fill="white" fill-opacity="0.5" stroke="#1a3d2b" stroke-width="1.5"/>
+  <text x="115" y="378" text-anchor="middle" font-size="11" fill="#1a3d2b" font-weight="bold">Legend</text>
+  <rect x="42" y="388" width="14" height="10" fill="#f5f0e8" stroke="#1a3d2b" stroke-width="1.5"/>
+  <text x="62" y="399" font-size="10" fill="#1a3d2b">UI / user-facing</text>
+  <rect x="42" y="408" width="14" height="10" fill="#e8f4ef" stroke="#1a3d2b" stroke-width="1.5"/>
+  <text x="62" y="419" font-size="10" fill="#1a3d2b">pipeline stage</text>
+  <rect x="42" y="428" width="14" height="10" fill="#fff0ee" stroke="#e8614a" stroke-width="1.5"/>
+  <text x="62" y="439" font-size="10" fill="#1a3d2b">validation / guard</text>
+  <line x1="42" y1="453" x2="56" y2="453" stroke="#e8614a" stroke-width="2" stroke-dasharray="4,2"/>
+  <text x="62" y="457" font-size="10" fill="#1a3d2b">self-correction</text>
+</svg>

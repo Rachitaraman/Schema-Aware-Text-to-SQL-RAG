@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.env
+venv/
+.venv/
+
+# Node
+node_modules/
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Data
+*.sql
+!data/db_setup.sql
+
+# Eval output
+sql-rag-backend/eval/results.json
+
+# Docker
+.docker/

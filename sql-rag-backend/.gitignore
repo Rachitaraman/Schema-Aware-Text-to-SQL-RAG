@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual env
+venv/
+.venv/
+env/
+
+# Environment
+.env
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Sentence transformer cache
+~/.cache/torch/
+sentence_transformers/
+
+# IDE
+.idea/
+.vscode/
+*.swp
