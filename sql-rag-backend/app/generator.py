@@ -1,8 +1,9 @@
-import anthropic
 import re
-from app.config import ANTHROPIC_API_KEY
+from openai import OpenAI
+from app.config import get_llm_provider_config
 
-client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+provider_config = get_llm_provider_config()
+client = OpenAI(api_key=provider_config["api_key"], base_url=provider_config["base_url"]) if provider_config["provider"] == "groq" else None
 
 SYSTEM_PROMPT = """You are an expert PostgreSQL query writer.
 Your ONLY job is to write a single valid PostgreSQL SELECT query based on the schema context provided.
@@ -60,8 +61,24 @@ Question: {question}{retry_str}
 
 SQL:"""
 
-    response = client.messages.create(
-        model="claude-sonnet-4-6",
+    if provider_config["provider"] == "groq":
+        response = client.chat.completions.create(
+            model=provider_config["model"],
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": user_content},
+            ],
+            temperature=0,
+            max_tokens=800,
+        )
+        raw = response.choices[0].message.content or ""
+        return clean_sql(raw)
+
+    import anthropic
+
+    anthropic_client = anthropic.Anthropic(api_key=provider_config["api_key"])
+    response = anthropic_client.messages.create(
+        model=provider_config["model"],
         max_tokens=800,
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_content}],

@@ -6,6 +6,7 @@ pgvector==0.2.5
 sentence-transformers==2.7.0
 sqlglot==23.12.2
 anthropic==0.28.0
+openai>=1.0.0
 python-dotenv==1.0.1
 pandas==2.2.2
 pytest==8.2.0

@@ -1,7 +1,8 @@
-import anthropic
-from app.config import ANTHROPIC_API_KEY
+from openai import OpenAI
+from app.config import get_llm_provider_config
 
-client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+provider_config = get_llm_provider_config()
+client = OpenAI(api_key=provider_config["api_key"], base_url=provider_config["base_url"]) if provider_config["provider"] == "groq" else None
 
 SYSTEM_PROMPT = """You are a helpful data analyst assistant.
 You will be given a user's question and the SQL query results that answer it.
@@ -39,8 +40,23 @@ def synthesize_answer(
     if len(rows) > 20:
         result_str += f"\n(showing 20 of {len(rows)} total rows)"
 
-    response = client.messages.create(
-        model="claude-sonnet-4-6",
+    if provider_config["provider"] == "groq":
+        response = client.chat.completions.create(
+            model=provider_config["model"],
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": f"Question: {question}\n\nQuery result:\n{result_str}"},
+            ],
+            temperature=0,
+            max_tokens=300,
+        )
+        return (response.choices[0].message.content or "").strip()
+
+    import anthropic
+
+    anthropic_client = anthropic.Anthropic(api_key=provider_config["api_key"])
+    response = anthropic_client.messages.create(
+        model=provider_config["model"],
         max_tokens=300,
         system=SYSTEM_PROMPT,
         messages=[{
